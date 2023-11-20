@@ -25,8 +25,8 @@ def csv_to_dict(file: str) -> list:
     return dict
 from constante import *
 from random import *
-
-dict = csv_to_dict('dataset_pokemon.csv')
+from copy import deepcopy
+dico_personnages = csv_to_dict('dataset_pokemon.csv')
 
 import pygame
 from pygame.locals import *
@@ -39,15 +39,56 @@ def liste_personnages(dict: list) -> dict:
 
 def selection_par_nom(nom: str) -> dict:
     for k in range(len(dict)):
-        if dict[k]["Name"] == nom:
-            return dict[k]
+        if dico_personnages[k]["Name"] == nom:
+            return deepcopy(dict[k])
+
+def selection_attaque(dict: dict, n: int) -> list:
+    L = []
+    for k in range(len(dict)):
+        if dict[k]["Attack"] == n:
+            L.append(dict[k])
+    return L
+
+def selection(dict: dict, champ: str, operateur: str, val: str, type_data: str) -> list:
+    L = []
+    if type_data == "str":
+        val = str(val)
+    if type_data == "int":
+        val = int(val)
+    if type_data == "float":
+        val = float(val)
+    if type_data == "list":
+        val = list(val)
+    if type_data == "bool":
+        val = bool(val)
+    if type_data == "dict":
+        val = dict(val)
+    for k in range(len(dict)):
+        if operateur == "<":
+            if dict[k][champ] < val:
+                L.append(dict[k]["Name"])
+        if operateur == ">":
+            if dict[k][champ] > val:
+                L.append(dict[k]["Name"])
+        if operateur == "<=":
+            if dict[k][champ] <= val:
+                L.append(dict[k]["Name"])
+        if operateur == ">=":
+            if dict[k][champ] >= val:
+                L.append(dict[k]["Name"])
+        if operateur == "=" or operateur == "==":
+            if dict[k][champ] == val:
+                L.append(dict[k]["Name"])
+    return L
+
+print(selection(dico_personnages, "Speed", "<", "60", "str"))
 
 def generer_grille_pokemon(x, y):
-    for sprite in range(0, len(dict)):
+    for sprite in range(0,  len(dico_personnages)):
         if sprite == 9 or sprite == 18 or sprite == 27 or sprite == 36:
             y += taille_sprite
             x = 50
-        image_pokemon = "images/" + dict[sprite]["Name"] + ".png"
+        image_pokemon = "images/" + dico_personnages[sprite]["Name"] + ".png"
         image = pygame.image.load(image_pokemon).convert_alpha()
         image = pygame.transform.scale(image, (taille_sprite, taille_sprite))
         fenetre_jeu.blit(image, (x, y))
@@ -100,16 +141,16 @@ def afficher_pokemon(x, y, team):
     if team == "red":
         fenetre_jeu.blit(image, (50, 850))
     # image Pokémon
-    image_pokemon = "images/" + dict[pokemon_id]["Name"] + ".png"
+    image_pokemon = "images/" + dico_personnages[pokemon_id]["Name"] + ".png"
     image_pokemon = pygame.image.load(image_pokemon).convert_alpha()
     image_pokemon = pygame.transform.scale(image_pokemon, (taille_sprite, taille_sprite))
     # nom + ID + Gen Pokémon
     my_font = pygame.font.SysFont('Arial', 25)
-    nom_pokemon = my_font.render("Name : " + dict[pokemon_id]["Name"] + " | N°" + dict[pokemon_id]["ID"] + " | Gen : " + dict[pokemon_id]["Generation"], False, (255, 255, 255))
-    if dict[pokemon_id]["Type 2"] == "":
-        types_pokemon = my_font.render("Type : " + dict[pokemon_id]["Type 1"], False, (255, 255, 255))
+    nom_pokemon = my_font.render("Name : " + dico_personnages[pokemon_id]["Name"] + " | N°" + dico_personnages[pokemon_id]["ID"] + " | Gen : " + dico_personnages[pokemon_id]["Generation"], False, (255, 255, 255))
+    if dico_personnages[pokemon_id]["Type 2"] == "":
+        types_pokemon = my_font.render("Type : " + dico_personnages[pokemon_id]["Type 1"], False, (255, 255, 255))
     else:
-        types_pokemon = my_font.render("Types : " + dict[pokemon_id]["Type 1"] + " and " + dict[pokemon_id]["Type 2"], False, (255, 255, 255))
+        types_pokemon = my_font.render("Types : " + dico_personnages[pokemon_id]["Type 1"] + " and " + dico_personnages[pokemon_id]["Type 2"], False, (255, 255, 255))
     if team == "blue":
         fenetre_jeu.blit(image_pokemon, (1032, 850))
         fenetre_jeu.blit(nom_pokemon, (1207, 860))
@@ -123,7 +164,6 @@ def afficher_pokemon(x, y, team):
     return pokemon_id
 
 while continuer_la_boucle:
-
     pygame.init()   
     for event in pygame.event.get():
         if event.type == KEYDOWN and event.key == K_ESCAPE:
