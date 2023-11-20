@@ -57,7 +57,7 @@ def selection_attaque(dict_pokemon: dict, n: int) -> list:
 
 
 def selection(dict_pokemon: list, champ: str, operateur: str, val: str, type_data: str) -> list:
-    L = []
+    liste = []
     if type_data == "str":
         val = str(val)
     if type_data == "int":
@@ -71,20 +71,20 @@ def selection(dict_pokemon: list, champ: str, operateur: str, val: str, type_dat
     for _ in range(len(dict_pokemon)):
         if operateur == "<":
             if dict_pokemon[k][champ] < val:
-                L.append(dict_pokemon[_]["Name"])
+                liste.append(dict_pokemon[_]["Name"])
         if operateur == ">":
             if dict_pokemon[k][champ] > val:
-                L.append(dict_pokemon[_]["Name"])
+                liste.append(dict_pokemon[_]["Name"])
         if operateur == "<=":
             if dict_pokemon[k][champ] <= val:
-                L.append(dict_pokemon[_]["Name"])
+                liste.append(dict_pokemon[_]["Name"])
         if operateur == ">=":
             if dict_pokemon[k][champ] >= val:
-                L.append(dict_pokemon[_]["Name"])
+                liste.append(dict_pokemon[_]["Name"])
         if operateur == "=" or operateur == "==":
             if dict_pokemon[k][champ] == val:
-                L.append(dict_pokemon[_]["Name"])
-    return L
+                liste.append(dict_pokemon[_]["Name"])
+    return liste
 
 
 print(selection(dico_personnages, "Speed", "<", "60", "str"))
