@@ -23,7 +23,7 @@ def csv_to_dict(file: str) -> list:
         reader = csv.DictReader(file)
         dict = [row for row in reader]
     return dict
-from variables import *
+from constante import *
 from random import *
 
 dict = csv_to_dict('dataset_pokemon.csv')
@@ -31,6 +31,17 @@ dict = csv_to_dict('dataset_pokemon.csv')
 import pygame
 from pygame.locals import *
 
+def liste_personnages(dict: list) -> dict:
+    L = []
+    for k in range(len(dict)):
+        L.append(dict[k]["Name"])
+    return L
+
+def selection_par_nom(nom: str) -> dict:
+    for k in range(len(dict)):
+        if dict[k]["Name"] == nom:
+            return dict[k]
+        
 def generer_grille_pokemon(x, y):
     for sprite in range(0, len(dict)):
         if sprite == 9 or sprite == 18 or sprite == 27 or sprite == 36:
