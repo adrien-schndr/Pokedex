@@ -41,7 +41,7 @@ def selection_par_nom(nom: str) -> dict:
     for k in range(len(dict)):
         if dict[k]["Name"] == nom:
             return dict[k]
-        
+
 def generer_grille_pokemon(x, y):
     for sprite in range(0, len(dict)):
         if sprite == 9 or sprite == 18 or sprite == 27 or sprite == 36:
