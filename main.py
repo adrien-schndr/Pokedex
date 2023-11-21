@@ -33,6 +33,7 @@ def csv_to_dict(file: str) -> list:
 
 
 dico_personnages = csv_to_dict('dataset_pokemon.csv')
+dict_chosen_characters = {"Attack": [], "Defense": []}
 
 
 def liste_personnages(dict_pokemon: list) -> list:
@@ -87,9 +88,6 @@ def selection(dict_pokemon: list, champ: str, operateur: str, val: str, type_dat
     return liste
 
 
-print(selection(dico_personnages, "Speed", "<", "60", "str"))
-
-
 def generer_grille_pokemon(x_coord, y_coord):
     for sprite in range(0, len(dico_personnages)):
         if sprite == 9 or sprite == 18 or sprite == 27 or sprite == 36:
@@ -121,13 +119,19 @@ def generer_grille_pokemon(x_coord, y_coord):
     fenetre_jeu.blit(image, (1789, 925))
     pygame.image.save(fenetre_jeu, 'grille.bmp')
 
+    image_pokemon = "images/system/chosen_character_red.png"
+    image = pygame.image.load(image_pokemon).convert_alpha()
+    image = pygame.transform.scale(image, (100, 100))
+    fenetre_jeu.blit(image, (807, 925))
+    pygame.image.save(fenetre_jeu, 'grille.bmp')
+
 
 generer_grille_pokemon(x, y)
 
 
-def creation_fenetre():
+def creation_fenetre_jeu():
     """
-    On créé et affiche la fenètre de jeu à laquelle on la grille des pokémons.
+    On créé et affiche la fenètre de jeu à laquelle on la grille des pokémons.q
     """
     pygame.draw.rect(fenetre_jeu, Color("#000000"), (0, 0, 1920, 1080))
     pygame.display.set_caption('Pokédex')
@@ -138,8 +142,16 @@ def creation_fenetre():
     pygame.display.flip()
 
 
+def creation_menu():
+    image_niveau = "menu.png"
+    fond_niveau = pygame.image.load(image_niveau).convert_alpha()
+    fond_niveau = pygame.transform.scale(fond_niveau, (1920, 1080))
+    fenetre_jeu.blit(fond_niveau, (0, 0))
+    pygame.display.flip()
+
+
 pygame.init()
-creation_fenetre()
+creation_menu()
 
 continuer_la_boucle = True
 
@@ -179,50 +191,85 @@ def afficher_pokemon(x_coord, y_coord, team):
         fenetre_jeu.blit(image_pokemon, (50, 850))
         fenetre_jeu.blit(nom_pokemon, (225, 860))
         fenetre_jeu.blit(types_pokemon, (225, 890))
+
+    image_pokemon = "images/system/chosen_character_blue.png"
+    image = pygame.image.load(image_pokemon).convert_alpha()
+    image = pygame.transform.scale(image, (100, 100))
+    fenetre_jeu.blit(image, (1789, 925))
+    pygame.image.save(fenetre_jeu, 'grille.bmp')
+
+    image_pokemon = "images/system/chosen_character_red.png"
+    image = pygame.image.load(image_pokemon).convert_alpha()
+    image = pygame.transform.scale(image, (100, 100))
+    fenetre_jeu.blit(image, (1789 - 982, 925))
     pygame.font.init()
     pygame.display.flip()
     return pokemon_id
 
 
+id_chosen = -1
+
 while continuer_la_boucle:
     pygame.init()
     for event in pygame.event.get():
+        # si on appuie sur <echap>
         if event.type == KEYDOWN and event.key == K_ESCAPE:
             pygame.quit()
             continuer_la_boucle = False
+        # si on utilise les clics de la souris
         if event.type == MOUSEBUTTONDOWN:
-            if 50 <= event.pos[0] <= 1864 and 50 <= event.pos[1] <= 800:
-                y_grille = (event.pos[1] - 50) // taille_sprite
-                x_grille = 0
-                if 50 <= event.pos[0] <= 200:
+            # si on est dans le choix des personnages
+            if status == "Choix Personnages":
+                if 50 <= event.pos[0] <= 1864 and 50 <= event.pos[1] <= 800:
+                    y_grille = (event.pos[1] - 50) // taille_sprite
                     x_grille = 0
-                if 256 <= event.pos[0] <= 408:
-                    x_grille = 1
-                if 466 <= event.pos[0] <= 616:
-                    x_grille = 2
-                if 674 <= event.pos[0] <= 824:
-                    x_grille = 3
-                if 882 <= event.pos[0] <= 1032:
-                    x_grille = 4
-                if 1090 <= event.pos[0] <= 1240:
-                    x_grille = 5
-                if 1298 <= event.pos[0] <= 1448:
-                    x_grille = 6
-                if 1506 <= event.pos[0] <= 1656:
-                    x_grille = 7
-                if 1714 <= event.pos[0] <= 1864:
-                    x_grille = 8
-                if 1714 <= event.pos[0] <= 1864:
-                    x_grille = 8
-                if event.button == 1:
-                    afficher_pokemon(x_grille, y_grille, "red")
-                elif event.button == 3:
-                    afficher_pokemon(x_grille, y_grille, "blue")
-            # random
-            if 907 <= event.pos[0] <= 1007 and 875 <= event.pos[1] <= 975:
-                if event.button == 1:
-                    afficher_pokemon(-1, -1, "red")
-                elif event.button == 3:
-                    afficher_pokemon(-1, -1, "blue")
+                    if 50 <= event.pos[0] <= 200:
+                        x_grille = 0
+                    if 256 <= event.pos[0] <= 408:
+                        x_grille = 1
+                    if 466 <= event.pos[0] <= 616:
+                        x_grille = 2
+                    if 674 <= event.pos[0] <= 824:
+                        x_grille = 3
+                    if 882 <= event.pos[0] <= 1032:
+                        x_grille = 4
+                    if 1090 <= event.pos[0] <= 1240:
+                        x_grille = 5
+                    if 1298 <= event.pos[0] <= 1448:
+                        x_grille = 6
+                    if 1506 <= event.pos[0] <= 1656:
+                        x_grille = 7
+                    if 1714 <= event.pos[0] <= 1864:
+                        x_grille = 8
+                    if 1714 <= event.pos[0] <= 1864:
+                        x_grille = 8
+                    if event.button == 1:
+                        afficher_pokemon(x_grille, y_grille, "red")
+                    elif event.button == 3:
+                        afficher_pokemon(x_grille, y_grille, "blue")
+                # random
+                if 907 <= event.pos[0] <= 1007 and 875 <= event.pos[1] <= 975:
+                    if event.button == 1:
+                        id_chosen = afficher_pokemon(-1, -1, "red")
+                        dict_chosen_characters["Attack"].append(dico_personnages[id])
+                        print(dict_chosen_characters)
+                    elif event.button == 3:
+                        afficher_pokemon(-1, -1, "blue")
+                if 807 <= event.pos[0] <= 907 and 925 <= event.pos[1] <= 1025:
+                    if id_chosen != -1:
+                        dict_chosen_characters["Attack"].append(dico_personnages[id])
+                        print(dict_chosen_characters)
+            # si on est dans le menu du jeu
+            if status == "Menu":
+                # si on appuye sur le bouton 'jouer'
+                if 1337 <= event.pos[0] <= 1820 and 374 <= event.pos[1] <= 529 and event.button == 1:
+                    status = "Choix Personnages"
+                    creation_fenetre_jeu()
+                # si on appuye sur le bouton 'quitter'
+                if 708 <= event.pos[0] <= 1191 and 832 <= event.pos[1] <= 987 and event.button == 1:
+                    pygame.quit()
+                    continuer_la_boucle = False
+            else:
+                pass
 
 pygame.quit()
