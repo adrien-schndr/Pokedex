@@ -114,6 +114,11 @@ def generer_grille_pokemon(x_coord, y_coord):
     image = pygame.image.load(image_pokemon).convert_alpha()
     image = pygame.transform.scale(image, (100, 100))
     fenetre_jeu.blit(image, (907, 875))
+
+    image_pokemon = "images/system/chosen_character_blue.png"
+    image = pygame.image.load(image_pokemon).convert_alpha()
+    image = pygame.transform.scale(image, (100, 100))
+    fenetre_jeu.blit(image, (1789, 925))
     pygame.image.save(fenetre_jeu, 'grille.bmp')
 
 
