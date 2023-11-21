@@ -1,8 +1,10 @@
-from constante import *
-from random import *
 from copy import deepcopy
+
 import pygame
 from pygame.locals import *
+
+from constante import *
+from random import randint
 
 
 def csv_to_dict(file: str) -> list:
@@ -89,6 +91,10 @@ def selection(dict_pokemon: list, champ: str, operateur: str, val: str, type_dat
 
 
 def generer_grille_pokemon(x_coord, y_coord):
+    image_pokemon = "background.png"
+    image = pygame.image.load(image_pokemon).convert_alpha()
+    image = pygame.transform.scale(image, (1920, 1080))
+    fenetre_jeu.blit(image, (0, 0))
     for sprite in range(0, len(dico_personnages)):
         if sprite == 9 or sprite == 18 or sprite == 27 or sprite == 36:
             y_coord += taille_sprite
@@ -153,7 +159,7 @@ def creation_menu():
 pygame.init()
 creation_menu()
 
-continuer_la_boucle = True
+running = True
 
 
 def afficher_pokemon(x_coord, y_coord, team):
@@ -172,6 +178,7 @@ def afficher_pokemon(x_coord, y_coord, team):
     image_pokemon = "images/" + dico_personnages[pokemon_id]["Name"] + ".png"
     image_pokemon = pygame.image.load(image_pokemon).convert_alpha()
     image_pokemon = pygame.transform.scale(image_pokemon, (taille_sprite, taille_sprite))
+    # noinspection PyShadowingNames
     my_font = pygame.font.SysFont('Arial', 25)
     # nom + ID + Gen Pokémon
     nom_pokemon = my_font.render(
@@ -209,7 +216,48 @@ def afficher_pokemon(x_coord, y_coord, team):
 
 id_chosen = -1
 
-while continuer_la_boucle:
+
+def attack(attacker: dict, defenser: dict) -> int:
+    return int((((int(attacker["Attack"]) * 0.6 + int(attacker["Speed"]) * 4) / (int(defenser["Defense"]) * 0.5)) + 2) * randint(1, 4))
+
+
+def whos_first(attacker: dict, defenser: dict, id: int):
+    if int(attacker[id]["Speed"]) > int(defenser[id]["Speed"]):
+        return attacker, defenser
+    if int(attacker[id]["Speed"]) < int(defenser[id]["Speed"]):
+        return defenser, attacker
+    else:
+        n = randint(1, 2)
+        if n == 1:
+            return attacker, defenser
+        else:
+            return defenser, attacker
+
+
+def fighting(dico: dict):
+    gagnant = []
+    for fight_number in range(0, 3):
+        attacker, defenser = whos_first(dico["Attack"], dico["Defense"], fight_number)
+        damages = attack(attacker[fight_number], defenser[fight_number])
+        print(damages)
+        health_points = int(defenser[fight_number]["HP"])
+        health_points -= damages
+        defenser[fight_number]["HP"] = str(health_points)
+        attacker, defenser = defenser, attacker
+        print(int(attacker[fight_number]["HP"]), int(defenser[fight_number]["HP"]), fight_number)
+        if int(attacker[fight_number]["HP"]) > 0 or int(defenser[fight_number]["HP"]) > 0:
+            fight_number -= 1
+        if defenser[fight_number]["HP"] < attacker[fight_number]["HP"]:
+            gagnant.append(attacker[fight_number]["Name"] + " - Rouge")
+            fight_number += 1
+        else:
+            gagnant.append(defenser[fight_number]["Name"] + " - Rouge")
+            fight_number += 1
+    print("exit")
+    return gagnant
+
+
+while running:
     pygame.init()
     for event in pygame.event.get():
         # si on appuie sur <echap>
@@ -333,6 +381,7 @@ while continuer_la_boucle:
                     continuer_la_boucle = False
             else:
                 pass
-
-
+    if len(dict_chosen_characters["Attack"]) == 3 and len(dict_chosen_characters["Defense"]) == 3:
+        print(fighting(dict_chosen_characters))
+        dict_chosen_characters = {"Attack": [], "Defense": []}
 pygame.quit()
