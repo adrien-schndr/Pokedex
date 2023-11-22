@@ -1,6 +1,5 @@
 from copy import deepcopy
 
-import pygame
 from pygame.locals import *
 
 from constante import *
@@ -218,7 +217,8 @@ id_chosen = -1
 
 
 def attack(attacker: dict, defenser: dict) -> int:
-    return int((((int(attacker["Attack"]) * 0.6 + int(attacker["Speed"]) * 4) / (int(defenser["Defense"]) * 0.5)) + 2) * randint(1, 4))
+    return int((((int(attacker["Attack"]) * 0.6 + int(attacker["Speed"]) * 4) / (int(defenser["Defense"]) * 0.5)) + 2) *
+               randint(1, 4))
 
 
 def whos_first(attacker: dict, defenser: dict):
@@ -232,6 +232,7 @@ def whos_first(attacker: dict, defenser: dict):
             return attacker, defenser
         else:
             return defenser, attacker
+
 
 def fighting(dico: dict):
     gagnant = []
