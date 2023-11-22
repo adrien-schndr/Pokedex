@@ -221,10 +221,10 @@ def attack(attacker: dict, defenser: dict) -> int:
     return int((((int(attacker["Attack"]) * 0.6 + int(attacker["Speed"]) * 4) / (int(defenser["Defense"]) * 0.5)) + 2) * randint(1, 4))
 
 
-def whos_first(attacker: dict, defenser: dict, id: int):
-    if int(attacker[id]["Speed"]) > int(defenser[id]["Speed"]):
+def whos_first(attacker: dict, defenser: dict):
+    if int(attacker["Speed"]) > int(defenser["Speed"]):
         return attacker, defenser
-    if int(attacker[id]["Speed"]) < int(defenser[id]["Speed"]):
+    if int(attacker["Speed"]) < int(defenser["Speed"]):
         return defenser, attacker
     else:
         n = randint(1, 2)
@@ -233,26 +233,23 @@ def whos_first(attacker: dict, defenser: dict, id: int):
         else:
             return defenser, attacker
 
-
 def fighting(dico: dict):
     gagnant = []
     for fight_number in range(0, 3):
-        attacker, defenser = whos_first(dico["Attack"], dico["Defense"], fight_number)
-        damages = attack(attacker[fight_number], defenser[fight_number])
-        print(damages)
-        health_points = int(defenser[fight_number]["HP"])
-        health_points -= damages
-        defenser[fight_number]["HP"] = str(health_points)
-        attacker, defenser = defenser, attacker
-        print(int(attacker[fight_number]["HP"]), int(defenser[fight_number]["HP"]), fight_number)
-        if int(attacker[fight_number]["HP"]) > 0 or int(defenser[fight_number]["HP"]) > 0:
-            fight_number -= 1
-        if defenser[fight_number]["HP"] < attacker[fight_number]["HP"]:
-            gagnant.append(attacker[fight_number]["Name"] + " - Rouge")
-            fight_number += 1
-        else:
-            gagnant.append(defenser[fight_number]["Name"] + " - Rouge")
-            fight_number += 1
+        print("Combat N°" + str(fight_number))
+        attacker, defenser = whos_first(dico["Attack"][fight_number], dico["Defense"][fight_number])
+        print(attacker["Name"] + " " + attacker["HP"], defenser["Name"] + " " + defenser["HP"])
+        while int(attacker["HP"]) > 0 or int(defenser["HP"]) > 0:
+            damages = attack(attacker, defenser)
+            print(damages)
+            health_points = int(defenser["HP"])
+            health_points -= damages
+            print(attacker["Name"] + " " + attacker["HP"], defenser["Name"] + " " + defenser["HP"])
+            if health_points <= 0:
+                gagnant.append(attacker["Name"])
+                break
+            defenser["HP"] = str(health_points)
+            attacker, defenser = defenser, attacker
     print("exit")
     return gagnant
 
