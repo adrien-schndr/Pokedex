@@ -265,6 +265,7 @@ while running:
         # si on utilise les clics de la souris
         if event.type == MOUSEBUTTONDOWN:
             # si on est dans le choix des personnages
+            # noinspection PyUnboundLocalVariable
             if status == "Choix Personnages":
                 if 50 <= event.pos[0] <= 1864 and 50 <= event.pos[1] <= 800:
                     y_grille = (event.pos[1] - 50) // taille_sprite
