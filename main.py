@@ -8,24 +8,6 @@ from random import randint
 
 
 def csv_to_dict(file: str) -> list:
-    """
-    dict = [ ... , {
-            'ID': <int>,
-            'Name': <str>,
-            'Type 1': <str>,
-            'Type 2': <str>,
-            'Total': <int>,
-            'HP': <int>,
-            'Attack': <int>,
-            'Defense': <int>,
-            'Sp. Atk': <int>,
-            'Sp. Def': <int>,
-            'Speed': <int>,
-            'Generation': <int>,
-            'Legendary': <bool>,
-    }, ... ]
-    len(dict) = 45
-    """
     import csv
 
     with open(file, 'r', encoding='utf-8-sig') as file:
@@ -59,35 +41,12 @@ def selection_attaque(dict_pokemon: dict, n: int) -> list:
     return liste
 
 
-def selection(dict_pokemon: list, champ: str, operateur: str, val: str, type_data: str) -> list:
-    liste = []
-    if type_data == "str":
-        val = str(val)
-    if type_data == "int":
-        val = int(val)
-    if type_data == "float":
-        val = float(val)
-    if type_data == "list":
-        val = list(val)
-    if type_data == "bool":
-        val = bool(val)
-    for _ in range(len(dict_pokemon)):
-        if operateur == "<":
-            if dict_pokemon[k][champ] < val:
-                liste.append(dict_pokemon[_]["Name"])
-        if operateur == ">":
-            if dict_pokemon[k][champ] > val:
-                liste.append(dict_pokemon[_]["Name"])
-        if operateur == "<=":
-            if dict_pokemon[k][champ] <= val:
-                liste.append(dict_pokemon[_]["Name"])
-        if operateur == ">=":
-            if dict_pokemon[k][champ] >= val:
-                liste.append(dict_pokemon[_]["Name"])
-        if operateur == "=" or operateur == "==":
-            if dict_pokemon[k][champ] == val:
-                liste.append(dict_pokemon[_]["Name"])
-    return liste
+# def selection(dico_personnages:dict,champ:str,operateur:str,n:str,type_data = "str"):
+#     L = []
+#     for nom,val in pokemons.items():
+#         if eval(f"{type_data}('{val[champ]}') {operateur} {type_data}('{n}')"):
+#             L.append(nom)
+#     return L
 
 
 def generer_grille_pokemon(x_coord, y_coord):
@@ -211,7 +170,6 @@ def afficher_pokemon(x_coord, y_coord, team):
     image = pygame.image.load(image_pokemon).convert_alpha()
     image = pygame.transform.scale(image, (100, 100))
     fenetre_jeu.blit(image, (1789, 925))
-    pygame.image.save(fenetre_jeu, 'grille.bmp')
 
     image_pokemon = "images/system/chosen_character_red.png"
     image = pygame.image.load(image_pokemon).convert_alpha()
@@ -231,7 +189,16 @@ def choisir_pokemon(side: str) -> list:
     else:
         x = 1032
     if id_chosen != -1 and 0 <= len(dict_chosen_characters[side]) < 3:
+        # dict = {
+        #       "Attack": [
+        #           {
+        #               stats
+        #           }
+        #       ]
+        # }
         dict_chosen_characters[side].append(dico_personnages[id_chosen])
+        dict_chosen_characters[side][-1]["Base HP"] = dict_chosen_characters[side][-1]["HP"]
+        print(dict_chosen_characters)
         if len(dict_chosen_characters[side]) == 1:
             my_font = pygame.font.SysFont('Arial', 25)
             attaquants_new = my_font.render(
@@ -269,7 +236,7 @@ while running:
         # si on appuie sur <echap>
         if event.type == KEYDOWN and event.key == K_ESCAPE:
             pygame.quit()
-            continuer_la_boucle = False
+            running = False
         # si on utilise les clics de la souris
         if event.type == MOUSEBUTTONDOWN:
             # si on est dans le choix des personnages
@@ -318,16 +285,18 @@ while running:
             # si on est dans le menu du jeu
             if status == "Menu":
                 # si on appuye sur le bouton 'jouer'
-                if 1337 <= event.pos[0] <= 1820 and 374 <= event.pos[1] <= 529 and event.button == 1:
+                if 1315 <= event.pos[0] <= 1315+442 and 460 <= event.pos[1] <= 460+159 and event.button == 1:
                     status = "Choix Personnages"
                     creation_fenetre_jeu()
                 # si on appuye sur le bouton 'quitter'
-                if 708 <= event.pos[0] <= 1191 and 832 <= event.pos[1] <= 987 and event.button == 1:
+                if 739 <= event.pos[0] <= 739+442 and 877 <= event.pos[1] <= 877+159 and event.button == 1:
                     pygame.quit()
-                    continuer_la_boucle = False
+                    running = False
             else:
                 pass
     if len(dict_chosen_characters["Attack"]) == 3 and len(dict_chosen_characters["Defense"]) == 3:
-        gagnants_dico(dict_chosen_characters, fighting(dict_chosen_characters))
+        status = "Fight"
+        print(fight_gui(dict_chosen_characters))
+        # gagnants_dico(dict_chosen_characters, fighting(dict_chosen_characters))
         dict_chosen_characters = {"Attack": [], "Defense": []}
 pygame.quit()
