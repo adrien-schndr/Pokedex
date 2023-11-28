@@ -60,11 +60,11 @@ def fighting(dico: dict, gagnant: list, fight_number: int):
         base_health_bar = "images/system/base_health_bar.png"
         base_health_bar = pygame.image.load(base_health_bar).convert_alpha()
         base_health_bar = pygame.transform.scale(base_health_bar, (100, 20))
-        fenetre_jeu.blit(base_health_bar, (1500, 390))
+        fenetre_jeu.blit(base_health_bar, (1500, 290))
         blue_health_bar = "images/system/blue_health_bar.png"
         blue_health_bar = pygame.image.load(blue_health_bar).convert_alpha()
         blue_health_bar = pygame.transform.scale(blue_health_bar, (health_bar_maker(dico, fight_number, "Attack"), 20))
-        fenetre_jeu.blit(blue_health_bar, (1500, 390))
+        fenetre_jeu.blit(blue_health_bar, (1500, 290))
         pygame.display.flip()
         if tour == -1:
             break
