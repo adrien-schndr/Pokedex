@@ -1,7 +1,7 @@
-from random import randint
-from constante import *
 import time
-from pygame.locals import *
+from random import randint
+
+from constante import *
 
 
 def attack(attacker: dict, defenser: dict) -> int:
@@ -28,21 +28,20 @@ def fighting(dico: dict, gagnant: list, fight_number: int):
     fond_niveau = pygame.transform.scale(fond_niveau, (1920, 1080))
     fenetre_jeu.blit(fond_niveau, (0, 0))
     attacker, defenser = whos_first(dico["Attack"][fight_number], dico["Defense"][fight_number])
-    attacker_picture = "images/" + attacker["Name"] + ".png"
+    attacker_picture = "images/" + dico["Defense"][fight_number]["Name"] + ".png"
     attacker_picture = pygame.image.load(attacker_picture).convert_alpha()
     attacker_picture = pygame.transform.scale(attacker_picture, (500, 500))
     attacker_picture = pygame.transform.flip(attacker_picture, True, False)
     fenetre_jeu.blit(attacker_picture, (150, 490))
-    defenser_picture = "images/" + defenser["Name"] + ".png"
+    defenser_picture = "images/" + dico["Attack"][fight_number]["Name"] + ".png"
     defenser_picture = pygame.image.load(defenser_picture).convert_alpha()
     defenser_picture = pygame.transform.scale(defenser_picture, (350, 350))
     fenetre_jeu.blit(defenser_picture, (1400, 240))
     pygame.display.flip()
-    reverse = False
     print("Attacker ", health_bar_maker(dico, fight_number, "Attack"))
     print("Defenser ", health_bar_maker(dico, fight_number, "Defense"))
     tour = 0
-    while tour == -1:
+    while True:
         if int(defenser["HP"]) <= 0:
             defenser["HP"] = "0"
         if int(attacker["HP"]) <= 0:
@@ -55,7 +54,7 @@ def fighting(dico: dict, gagnant: list, fight_number: int):
         fenetre_jeu.blit(base_health_bar, (150, 390))
         red_health_bar = "images/system/red_health_bar.png"
         red_health_bar = pygame.image.load(red_health_bar).convert_alpha()
-        red_health_bar = pygame.transform.scale(red_health_bar, (int(attacker["HP"]), 20))
+        red_health_bar = pygame.transform.scale(red_health_bar, (health_bar_maker(dico, fight_number, "Defense"), 20))
         fenetre_jeu.blit(red_health_bar, (150, 390))
         pygame.display.flip()
         base_health_bar = "images/system/base_health_bar.png"
@@ -64,10 +63,10 @@ def fighting(dico: dict, gagnant: list, fight_number: int):
         fenetre_jeu.blit(base_health_bar, (1500, 390))
         blue_health_bar = "images/system/blue_health_bar.png"
         blue_health_bar = pygame.image.load(blue_health_bar).convert_alpha()
-        blue_health_bar = pygame.transform.scale(blue_health_bar, (int(defenser["HP"]), 20))
+        blue_health_bar = pygame.transform.scale(blue_health_bar, (health_bar_maker(dico, fight_number, "Attack"), 20))
         fenetre_jeu.blit(blue_health_bar, (1500, 390))
         pygame.display.flip()
-        if tour < 0:
+        if tour == -1:
             break
         if tour % 2 == 0:
             damages = attack(attacker, defenser)

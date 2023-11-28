@@ -2,7 +2,6 @@ from copy import deepcopy
 
 from pygame.locals import *
 
-from constante import *
 from fight_system import *
 from random import randint
 
@@ -183,6 +182,7 @@ def afficher_pokemon(x_coord, y_coord, team):
 id_chosen = -1
 
 
+# noinspection PyShadowingNames
 def choisir_pokemon(side: str) -> list:
     if side == "Attack":
         x = 50
