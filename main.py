@@ -23,6 +23,18 @@ dico_personnages = csv_to_dict('dataset_pokemon.csv')
 dict_chosen_characters = {"Attack": [], "Defense": []}
 
 
+def affiche_dico(dico):
+    print("----------------------------------------")
+    for pokemon in dico:
+        for cle, val in pokemon.items():
+            print(str(cle).center(20), end=" ")
+            print(str(val).center(20), end="\n")
+        print("----------------------------------------")
+
+
+# affiche_dico(dico_personnages)
+
+
 # ------------------------------------------------ USELESS FUNCTIONS ------------------------------------------------ #
 
 
@@ -231,7 +243,6 @@ def choisir_pokemon(side: str) -> list:
     if id_chosen != -1 and 0 <= len(dict_chosen_characters[side]) < 3:
         dict_chosen_characters[side].append(dico_personnages[id_chosen])
         dict_chosen_characters[side][-1]["Base HP"] = dict_chosen_characters[side][-1]["HP"]
-        print(dict_chosen_characters)
         if len(dict_chosen_characters[side]) == 1:
             my_font = pygame.font.SysFont('Arial', 25)
             attaquants_new = my_font.render(
