@@ -23,11 +23,13 @@ def whos_first(attacker: dict, defenser: dict):
 
 
 def fighting(dico: dict, gagnant: list, fight_number: int):
+
+    # Images
+
     image_niveau = "arena_background.png"
     fond_niveau = pygame.image.load(image_niveau).convert_alpha()
     fond_niveau = pygame.transform.scale(fond_niveau, (1920, 1080))
     fenetre_jeu.blit(fond_niveau, (0, 0))
-    attacker, defenser = whos_first(dico["Attack"][fight_number], dico["Defense"][fight_number])
     attacker_picture = "images/" + dico["Defense"][fight_number]["Name"] + ".png"
     attacker_picture = pygame.image.load(attacker_picture).convert_alpha()
     attacker_picture = pygame.transform.scale(attacker_picture, (500, 500))
@@ -38,16 +40,17 @@ def fighting(dico: dict, gagnant: list, fight_number: int):
     defenser_picture = pygame.transform.scale(defenser_picture, (350, 350))
     fenetre_jeu.blit(defenser_picture, (1400, 240))
     pygame.display.flip()
-    print("Attacker ", health_bar_maker(dico, fight_number, "Attack"))
-    print("Defenser ", health_bar_maker(dico, fight_number, "Defense"))
+
+    attacker, defenser = whos_first(dico["Attack"][fight_number], dico["Defense"][fight_number])
     tour = 0
     while True:
         if int(defenser["HP"]) <= 0:
             defenser["HP"] = "0"
         if int(attacker["HP"]) <= 0:
             attacker["HP"] = "0"
-        print("Attacker ", health_bar_maker(dico, fight_number, "Attack"))
-        print("Defenser ", health_bar_maker(dico, fight_number, "Defense"))
+
+        # Images
+
         base_health_bar = "images/system/base_health_bar.png"
         base_health_bar = pygame.image.load(base_health_bar).convert_alpha()
         base_health_bar = pygame.transform.scale(base_health_bar, (100, 20))
@@ -112,6 +115,9 @@ def fight_gui(dict_chosen_characters: dict):
 
 
 def health_bar_maker(dict_chosen_characters, fight_number, team):
+    """
+    Renvoie le pourcentage de vie d'un Pokémon appelé dict_chosen_characters[team][fight_number]
+    """
     max_health = int(dict_chosen_characters[team][fight_number]["Base HP"])
     current_health = int((int(dict_chosen_characters[team][fight_number]["HP"]) / max_health) * 100)
     if current_health <= 0:

@@ -6,6 +6,10 @@ from fight_system import *
 from random import randint
 
 
+# ---------------------------------------------- DICTIONNARY FUNCTIONS ---------------------------------------------- #
+# On transfrome le fichier dataset_pokemon.csv en une liste de dictionnaire telle que :
+# dico_personnages = [..., {}, ...]
+
 def csv_to_dict(file: str) -> list:
     import csv
 
@@ -19,6 +23,9 @@ dico_personnages = csv_to_dict('dataset_pokemon.csv')
 dict_chosen_characters = {"Attack": [], "Defense": []}
 
 
+# ------------------------------------------------ USELESS FUNCTIONS ------------------------------------------------ #
+
+
 def liste_personnages(dict_pokemon: list) -> list:
     liste = []
     for _ in range(len(dict_pokemon)):
@@ -28,27 +35,42 @@ def liste_personnages(dict_pokemon: list) -> list:
 
 def selection_par_nom(nom: str):
     for _ in range(len(dict)):
-        if dico_personnages[k]["Name"] == nom:
-            return deepcopy(dict[k])
+        if dico_personnages[_]["Name"] == nom:
+            return deepcopy(dict[_])
 
 
 def selection_attaque(dict_pokemon: dict, n: int) -> list:
     liste = []
     for _ in range(len(dict_pokemon)):
-        if dict_pokemon[k]["Attack"] == n:
-            liste.append(dict_pokemon[k])
+        if dict_pokemon[_]["Attack"] == n:
+            liste.append(dict_pokemon[_])
     return liste
 
 
-# def selection(dico_personnages:dict,champ:str,operateur:str,n:str,type_data = "str"):
-#     L = []
-#     for nom,val in pokemons.items():
-#         if eval(f"{type_data}('{val[champ]}') {operateur} {type_data}('{n}')"):
-#             L.append(nom)
-#     return L
+def selection_vitesse(dict_pokemon: dict, n: int) -> list:
+    liste = []
+    for _ in range(len(dict_pokemon)):
+        if dict_pokemon[_]["Speed"] >= n:
+            liste.append(dict_pokemon[_])
+    return liste
+
+
+def selection(dico: list, champ: str, operateur: str, n: str, type_data="str"):
+    L = []
+    for pokemon in range(0, len(dico)):
+        if eval(f"{type_data}('{dico[pokemon][champ]}') {operateur} {type_data}('{n}')"):
+            L.append(dico[pokemon]["Name"])
+    return L
+
+
+# print(selection(dico_personnages, "Speed", "<=", "60", type_data="int"))
 
 
 def generer_grille_pokemon(x_coord, y_coord):
+    """
+    On génère la grille de séléction des Pokémon que l'on exporte en grille.bmp, à l'aide du dictionnaire en récupérant
+    les Noms des personnages auquels ont associe le fichier .png éponyme.
+    """
     image_pokemon = "background.png"
     image = pygame.image.load(image_pokemon).convert_alpha()
     image = pygame.transform.scale(image, (1920, 1080))
@@ -95,7 +117,7 @@ generer_grille_pokemon(x, y)
 
 def creation_fenetre_jeu():
     """
-    On créé et affiche la fenètre de jeu à laquelle on la grille des pokémons.q
+    On créé et affiche la fenètre de jeu à laquelle on ajoute la grille des pokémons.
     """
     pygame.draw.rect(fenetre_jeu, Color("#000000"), (0, 0, 1920, 1080))
     pygame.display.set_caption('Pokédex')
@@ -107,6 +129,9 @@ def creation_fenetre_jeu():
 
 
 def creation_menu():
+    """
+    Initialise le menu du jeu
+    """
     image_niveau = "menu.png"
     fond_niveau = pygame.image.load(image_niveau).convert_alpha()
     fond_niveau = pygame.transform.scale(fond_niveau, (1920, 1080))
@@ -121,6 +146,10 @@ running = True
 
 
 def afficher_pokemon(x_coord, y_coord, team):
+    """
+    Affiche en bas de l'écran les informations du Pokémon sélectionné, equipe rouge si choisi avec clic gauche, équipe
+    bleue si choisi avec clic droit.
+    """
     if x_coord == y_coord and x_coord == -1:
         pokemon_id = randint(0, 44)
     else:
@@ -184,18 +213,22 @@ id_chosen = -1
 
 # noinspection PyShadowingNames
 def choisir_pokemon(side: str) -> list:
+    """
+    Ajoute le Pokémon (son dictionnaire) choisi quand cliqué sur le bouton "valider" de l'équipe au dictionnaire
+    dict_chosen_characters dans la clé de l'équipe associée dont la valeur est une liste de dictionnaires tel que
+    dict = {
+        "Attack": [
+            {
+                stats
+            }
+        ]
+    }
+    """
     if side == "Attack":
         x = 50
     else:
         x = 1032
     if id_chosen != -1 and 0 <= len(dict_chosen_characters[side]) < 3:
-        # dict = {
-        #       "Attack": [
-        #           {
-        #               stats
-        #           }
-        #       ]
-        # }
         dict_chosen_characters[side].append(dico_personnages[id_chosen])
         dict_chosen_characters[side][-1]["Base HP"] = dict_chosen_characters[side][-1]["HP"]
         print(dict_chosen_characters)
@@ -228,6 +261,9 @@ def choisir_pokemon(side: str) -> list:
                 dict_chosen_characters[side][2]["Name"]), False, (255, 255, 255))
             fenetre_jeu.blit(attaquants_new, (x, 1000))
         pygame.display.flip()
+
+
+# ------------------------------------------------ MAIN LOOP PYGAME ------------------------------------------------- #
 
 
 while running:
@@ -285,18 +321,19 @@ while running:
             # si on est dans le menu du jeu
             if status == "Menu":
                 # si on appuye sur le bouton 'jouer'
-                if 1315 <= event.pos[0] <= 1315+442 and 460 <= event.pos[1] <= 460+159 and event.button == 1:
+                if 1315 <= event.pos[0] <= 1315 + 442 and 460 <= event.pos[1] <= 460 + 159 and event.button == 1:
                     status = "Choix Personnages"
                     creation_fenetre_jeu()
                 # si on appuye sur le bouton 'quitter'
-                if 739 <= event.pos[0] <= 739+442 and 877 <= event.pos[1] <= 877+159 and event.button == 1:
+                if 739 <= event.pos[0] <= 739 + 442 and 877 <= event.pos[1] <= 877 + 159 and event.button == 1:
                     pygame.quit()
                     running = False
             else:
                 pass
+    # quand trois pokémon dans chaque équipe, on lance le combat (suite dans fight_system.py)
     if len(dict_chosen_characters["Attack"]) == 3 and len(dict_chosen_characters["Defense"]) == 3:
         status = "Fight"
         print(fight_gui(dict_chosen_characters))
-        # gagnants_dico(dict_chosen_characters, fighting(dict_chosen_characters))
         dict_chosen_characters = {"Attack": [], "Defense": []}
+
 pygame.quit()
