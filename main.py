@@ -344,7 +344,10 @@ while running:
     # quand trois pokémon dans chaque équipe, on lance le combat (suite dans fight_system.py)
     if len(dict_chosen_characters["Attack"]) == 3 and len(dict_chosen_characters["Defense"]) == 3:
         status = "Fight"
-        print(fight_gui(dict_chosen_characters))
+        gagnant, scores = (fight_gui(dict_chosen_characters))
+        print(gagnant)
+        print(scores)
         dict_chosen_characters = {"Attack": [], "Defense": []}
+        ending_screen(gagnant, scores)
 
 pygame.quit()
