@@ -184,7 +184,7 @@ def afficher_pokemon(x_coord, y_coord, team):
         "Name : " + dico_personnages[pokemon_id]["Name"] + " | N°" + dico_personnages[pokemon_id]["ID"] + " | Gen : " +
         dico_personnages[pokemon_id]["Generation"], False, (255, 255, 255))
     if dico_personnages[pokemon_id]["Type 2"] == "":
-        types_pokemon = my_font.render("Type : " + dico_personnages[pokemon_id]["Type 1"], False, (255, 255, 255))
+        types_pokemon = my_font.render("Type : " + dico_personnages[pokemon_id]["Type 1"], True, (255, 255, 255))
     else:
         types_pokemon = my_font.render(
             "Types : " + dico_personnages[pokemon_id]["Type 1"] + " and " + dico_personnages[pokemon_id]["Type 2"],
@@ -247,29 +247,29 @@ def choisir_pokemon(side: str) -> list:
             my_font = pygame.font.SysFont('Arial', 25)
             attaquants_new = my_font.render(
                 "Pokemon choisis : " + str(dict_chosen_characters[side][0]["Name"]),
-                False, (255, 255, 255))
+                True, (255, 255, 255))
             fenetre_jeu.blit(attaquants_new, (x, 1000))
             pygame.display.flip()
         if len(dict_chosen_characters[side]) == 2:
             my_font = pygame.font.SysFont('Arial', 25)
             attaquants_old = my_font.render(
                 "Pokemon choisis : " + str(dict_chosen_characters[side][0]["Name"]),
-                False, (0, 0, 0))
+                True, (0, 0, 0))
             fenetre_jeu.blit(attaquants_old, (x, 1000))
             attaquants_new = my_font.render("Pokemon choisis : " + str(
                 dict_chosen_characters[side][0]["Name"]) + " - " + str(
-                dict_chosen_characters[side][1]["Name"]), False, (255, 255, 255))
+                dict_chosen_characters[side][1]["Name"]), True, (255, 255, 255))
             fenetre_jeu.blit(attaquants_new, (x, 1000))
         if len(dict_chosen_characters[side]) == 3:
             my_font = pygame.font.SysFont('Arial', 25)
             attaquants_old = my_font.render("Pokemon choisis : " + str(
                 dict_chosen_characters[side][0]["Name"]) + " - " + str(
-                dict_chosen_characters[side][1]["Name"]), False, (0, 0, 0))
+                dict_chosen_characters[side][1]["Name"]), True, (0, 0, 0))
             fenetre_jeu.blit(attaquants_old, (x, 1000))
             attaquants_new = my_font.render("Pokemon choisis : " + str(
                 dict_chosen_characters[side][0]["Name"]) + " - " + str(
                 dict_chosen_characters[side][1]["Name"]) + " - " + str(
-                dict_chosen_characters[side][2]["Name"]), False, (255, 255, 255))
+                dict_chosen_characters[side][2]["Name"]), True, (255, 255, 255))
             fenetre_jeu.blit(attaquants_new, (x, 1000))
         pygame.display.flip()
 
