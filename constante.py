@@ -7,4 +7,5 @@ fenetre_jeu = pygame.display.set_mode((1920, 1080), pygame.SCALED | pygame.FULLS
 taille_sprite = 150
 x = 50
 y = 50
+id_chosen = -1
 status = "Menu"

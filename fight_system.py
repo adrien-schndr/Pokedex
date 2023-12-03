@@ -59,9 +59,11 @@ def fighting(dico: dict, gagnant: list, fight_number: int, scores: list):
         fenetre_jeu.blit(score_display, (950, 60))
         red_health_bar = "images/system/base_health_bar.png"
         red_health_bar = pygame.image.load(red_health_bar).convert_alpha()
-        red_health_bar = pygame.transform.scale(red_health_bar, (800-health_bar_maker(dico, fight_number, "Defense")*8, 40))
+        red_health_bar = pygame.transform.scale(red_health_bar, (800-health_bar_maker(
+            dico, fight_number, "Defense")*8, 40))
         fenetre_jeu.blit(red_health_bar, (50, 50))
-        red_health_bar = pygame.transform.scale(red_health_bar, (800-health_bar_maker(dico, fight_number, "Attack")*8, 40))
+        red_health_bar = pygame.transform.scale(red_health_bar, (800-health_bar_maker(
+            dico, fight_number, "Attack")*8, 40))
         fenetre_jeu.blit(red_health_bar, (1070, 50))
         pygame.display.flip()
 
@@ -80,7 +82,6 @@ def fighting(dico: dict, gagnant: list, fight_number: int, scores: list):
                     gagnant.append({"Name": attacker["Name"], "Team": "Defense"})
                     scores[0] += 1
                 fenetre_jeu.blit(fond_niveau, (0, 0))
-                score_display = my_font.render(str(scores[0]) + " : " + str(scores[1]), True, (255, 255, 255))
                 # fenetre_jeu.blit(score_display, (950, 60))
                 image_pokemon = "images/" + attacker["Name"] + ".png"
                 image_pokemon = pygame.image.load(image_pokemon).convert_alpha()
@@ -94,7 +95,6 @@ def fighting(dico: dict, gagnant: list, fight_number: int, scores: list):
             health_points -= damages
             if health_points <= 0:
                 fenetre_jeu.blit(fond_niveau, (0, 0))
-                score_display = my_font.render(str(scores[0]) + " : " + str(scores[1]), True, (255, 255, 255))
                 # fenetre_jeu.blit(score_display, (950, 60))
                 pygame.display.flip()
                 image_pokemon = "images/" + defenser["Name"] + ".png"
@@ -138,26 +138,32 @@ def health_bar_maker(dict_chosen_characters, fight_number, team):
     return current_health
 
 
-def ending_screen(gagnant, scores):
+def ending_screen(gagnant):
     my_font = pygame.font.SysFont('Arial', 25)
     image_niveau = "win_background.png"
     fond_niveau = pygame.image.load(image_niveau).convert_alpha()
     fond_niveau = pygame.transform.scale(fond_niveau, (1920, 1080))
     fenetre_jeu.blit(fond_niveau, (0, 0))
-    pygame.display.flip()
+    leave_button = "images/system/leave_button.png"
+    leave_button = pygame.image.load(leave_button).convert_alpha()
+    restart_button = "images/system/play_again_button.png"
+    restart_button = pygame.image.load(restart_button).convert_alpha()
     time.sleep(0.5)
-    x = 100
+    x_pos = 100
     for _ in range(len(gagnant)):
         image_pokemon = "images/" + gagnant[_]["Name"] + ".png"
         image = pygame.image.load(image_pokemon).convert_alpha()
         image = pygame.transform.scale(image, (500, 500))
-        fenetre_jeu.blit(image, (x, 480))
+        fenetre_jeu.blit(image, (x_pos, 480))
         if gagnant[_]["Team"] == "Attack":
             score_display = my_font.render("Equipe rouge", True, (255, 0, 0))
-            fenetre_jeu.blit(score_display, (x, 980))
+            fenetre_jeu.blit(score_display, (x_pos, 980))
         if gagnant[_]["Team"] == "Defense":
             score_display = my_font.render("Equipe bleue", True, (0, 0, 255))
-            fenetre_jeu.blit(score_display, (x+200, 980))
-        x += 600
+            fenetre_jeu.blit(score_display, (x_pos+200, 980))
+        x_pos += 600
         pygame.display.flip()
         time.sleep(0.5)
+    fenetre_jeu.blit(leave_button, (100, 100))
+    fenetre_jeu.blit(restart_button, (600, 100))
+    pygame.display.flip()

@@ -5,6 +5,11 @@ from pygame.locals import *
 from fight_system import *
 from random import randint
 
+pygame.mixer.init()
+pygame.mixer.music.load("music.mp3")
+pygame.mixer.music.set_volume(0.1)
+pygame.mixer.music.play(-1)
+
 
 # ---------------------------------------------- DICTIONNARY FUNCTIONS ---------------------------------------------- #
 # On transfrome le fichier dataset_pokemon.csv en une liste de dictionnaire telle que :
@@ -23,6 +28,7 @@ dico_personnages = csv_to_dict('dataset_pokemon.csv')
 dict_chosen_characters = {"Attack": [], "Defense": []}
 
 
+# noinspection PyArgumentEqualDefault
 def affiche_dico(dico):
     print("----------------------------------------")
     for pokemon in dico:
@@ -67,6 +73,7 @@ def selection_vitesse(dict_pokemon: dict, n: int) -> list:
     return liste
 
 
+# noinspection PyCompatibility
 def selection(dico: list, champ: str, operateur: str, n: str, type_data="str"):
     L = []
     for pokemon in range(0, len(dico)):
@@ -220,9 +227,6 @@ def afficher_pokemon(x_coord, y_coord, team):
     return pokemon_id
 
 
-id_chosen = -1
-
-
 # noinspection PyShadowingNames
 def choisir_pokemon(side: str) -> list:
     """
@@ -339,15 +343,21 @@ while running:
                 if 739 <= event.pos[0] <= 739 + 442 and 877 <= event.pos[1] <= 877 + 159 and event.button == 1:
                     pygame.quit()
                     running = False
+            if status == "Fight":
+                if 100 <= event.pos[0] <= 489 and 100 <= event.pos[1] <= 236:
+                    pygame.quit()
+                    running = False
+                if 600 <= event.pos[0] <= 1089 and 100 <= event.pos[1] <= 236:
+                    status = "Menu"
+                    dict_chosen_characters = {"Attack": [], "Defense": []}
+                    creation_menu()
+
             else:
                 pass
     # quand trois pokémon dans chaque équipe, on lance le combat (suite dans fight_system.py)
     if len(dict_chosen_characters["Attack"]) == 3 and len(dict_chosen_characters["Defense"]) == 3:
         status = "Fight"
         gagnant, scores = (fight_gui(dict_chosen_characters))
-        print(gagnant)
-        print(scores)
         dict_chosen_characters = {"Attack": [], "Defense": []}
-        ending_screen(gagnant, scores)
-
+        ending_screen(gagnant)
 pygame.quit()
